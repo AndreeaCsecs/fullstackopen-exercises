@@ -22,6 +22,4 @@ sequenceDiagram
 
     Note right of browser: Browser starts rendering the page<br>based on the JavaScript logic
 
-
-
 ```
