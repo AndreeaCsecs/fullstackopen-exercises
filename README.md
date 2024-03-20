@@ -13,14 +13,6 @@ The exercises are organized into directories based on the course parts and indiv
 - `part0`: Exercises for Part 0
 
 
-## Submission Guidelines
-
-Exercises are submitted via GitHub. You can either submit all exercises into the same repository or use multiple different repositories. If submitting exercises from different parts into the same repository, ensure to name your directories appropriately.
-
-## Collaborators
-
-If you use a private repository to submit the exercises, add **mluukkai** as a collaborator.
-
 ## Getting Started
 
 To get started, clone this repository to your local machine:
