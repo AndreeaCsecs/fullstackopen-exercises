@@ -33,6 +33,32 @@ To get started, clone this repository to your local machine:
 git clone https://github.com/your-username/fullstackopen-exercises.git
 ```
 
+## Exercises Completed
+
+### Part 0
+Exercises 0.1.-0.6.
+
+- HTML basics
+- CSS basics
+- HTML forms
+- Sequence diagrams
+- Single page app diagrams
+
+### Part 1
+Exercises 1.1.-1.14.
+
+- Course information display
+- Unicafe feedback app
+- Anecdotes app
+
+## Part 2
+Exercises 2.1.-2.20.
+
+- Course information display
+- Phonebook application
+- Country information app
+
+
 ## Feedback and Contributions
 
 Feedback and contributions are welcome! If you find any issues with the exercises or have suggestions for improvement, please feel free to open an issue or submit a pull request.
