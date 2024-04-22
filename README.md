@@ -11,11 +11,6 @@ Welcome to the **Fullstack Open Exercises** repository! This repository contains
 The exercises are organized into directories based on the course parts and individual exercises. Here's a breakdown of the directory structure:
 
 - `part0`: Exercises for Part 0
-  HTML basics
-  CSS basics
-  HTML forms
-  Sequence diagrams
-  Single page app diagrams
 - `part1`: Exercises for Part 1
   - `courseinfo`: Solutions for the course information exercise
   - `unicafe`: Solutions for the unicafe exercise
@@ -58,6 +53,10 @@ Exercises 2.1.-2.20.
 - Phonebook application
 - Country information app
 
+## Part 3
+Exercises 3.1.-3.22.
+
+- Phonebook backend application can be found [here](https://github.com/AndreeaCsecs/fullstackopen-exercises-backend)
 
 ## Feedback and Contributions
 
