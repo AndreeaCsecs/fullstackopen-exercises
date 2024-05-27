@@ -2,12 +2,16 @@
 
 const express = require("express");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const blogsRouter = express.Router();
 
 blogsRouter.get("/", async (request, response) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
     response.json(blogs);
   } catch (error) {
     console.error("Error fetching blogs:", error);
@@ -23,11 +27,15 @@ blogsRouter.post("/", async (request, response) => {
       return response.status(400).json({ error: "Title and URL are required" });
     }
 
+    const users = await User.find({});
+    const user = users[0];
+
     const blog = new Blog({
       title,
       author,
       url,
       likes: likes === undefined ? 0 : likes,
+      user: user._id,
     });
 
     const savedBlog = await blog.save();
