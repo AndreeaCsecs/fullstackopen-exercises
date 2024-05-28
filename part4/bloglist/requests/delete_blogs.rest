@@ -1,0 +1,4 @@
+//requests/delete_blogs.rest
+
+DELETE http://localhost:3003/api/blogs/663ba309f1ff2b35056410dc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFuZHJlIiwiaWQiOiI2NjU2MTUwYmEzMDc0MzQ5YjVmZWM3ZjciLCJpYXQiOjE3MTY5MTc5MTN9.thPFCzoC7KCBnE0aLtuzaeGJ74-rjYSRrF9CIHZ2mHw
