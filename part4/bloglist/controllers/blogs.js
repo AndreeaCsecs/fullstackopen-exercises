@@ -1,5 +1,3 @@
-//controllers/blogs.js
-
 const express = require("express");
 const Blog = require("../models/blog");
 const User = require("../models/user");
@@ -88,7 +86,6 @@ blogsRouter.delete("/:id", async (request, response) => {
       return response.status(404).json({ error: "Blog not found" });
     }
 
-    // Check if the user making the request is the creator of the blog
     if (blog.user && blog.user.toString() !== decodedToken.id) {
       return response
         .status(403)

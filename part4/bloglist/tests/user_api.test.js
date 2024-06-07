@@ -1,5 +1,3 @@
-// tests/user_api.test.js
-
 const { test, describe, after, beforeEach } = require("node:test");
 const assert = require("node:assert");
 const bcrypt = require("bcryptjs");
@@ -25,9 +23,9 @@ describe("when there is initially one user in db", () => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
-      username: "mluukkai",
-      name: "Matti Luukkainen",
-      password: "salainen",
+      username: "andreee",
+      name: "csesccsc",
+      password: "hi",
     };
 
     await api
@@ -47,9 +45,9 @@ describe("when there is initially one user in db", () => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
-      username: "root",
-      name: "Superuser",
-      password: "salainen",
+      username: "Hello",
+      name: "My name",
+      password: "pass",
     };
 
     const result = await api

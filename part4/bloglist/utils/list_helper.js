@@ -1,5 +1,3 @@
-//list_helper.js from the utils folder
-
 const dummy = (blogs) => {
   return 1;
 };

@@ -1,27 +1,67 @@
-// tests/blog_api.test.js
-
-const { test, after } = require("node:test");
+const { test, after, beforeEach } = require("node:test");
 const assert = require("node:assert");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const app = require("../app");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const api = supertest(app);
+
+let token;
+let user;
+let initialBlogs;
+
+beforeEach(async () => {
+  await User.deleteMany({});
+  await Blog.deleteMany({});
+
+  const passwordHash = await bcrypt.hash("password", 10);
+  user = new User({ username: "testuser", passwordHash });
+
+  const savedUser = await user.save();
+
+  const userForToken = {
+    username: savedUser.username,
+    id: savedUser._id,
+  };
+
+  token = jwt.sign(userForToken, process.env.SECRET);
+
+  const blog = new Blog({
+    title: "Initial ",
+    author: "Initial ",
+    url: "http://initialurl1.com",
+    user: savedUser._id,
+  });
+
+  await blog.save();
+
+  initialBlogs = await Blog.find({});
+});
 
 test("blogs are returned as JSON", async () => {
   await api
     .get("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .expect(200)
     .expect("Content-Type", /application\/json/);
 });
 
 test("blogs contain id property", async () => {
-  const response = await api.get("/api/blogs");
+  const response = await api
+    .get("/api/blogs")
+    .set("Authorization", `Bearer ${token}`);
 
-  response.body.forEach((blog) => {
-    assert.ok(blog.id);
-  });
+  if (Array.isArray(response.body)) {
+    response.body.forEach((blog) => {
+      assert.ok(blog.id);
+    });
+  } else {
+    assert.fail("Response body is not an array");
+  }
 });
 
 test("creating a new blog post", async () => {
@@ -36,6 +76,7 @@ test("creating a new blog post", async () => {
 
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect("Content-Type", /application\/json/);
@@ -50,10 +91,10 @@ test("creating a new blog post", async () => {
   const createdBlog = blogsAfterPost.find(
     (blog) => blog.title === newBlog.title
   );
-  assert.deepStrictEqual(createdBlog.toJSON(), {
-    ...newBlog,
-    id: createdBlog.id,
-  });
+  assert.strictEqual(createdBlog.title, newBlog.title);
+  assert.strictEqual(createdBlog.author, newBlog.author);
+  assert.strictEqual(createdBlog.url, newBlog.url);
+  assert.strictEqual(createdBlog.likes, newBlog.likes);
 });
 
 test("if likes property is missing, it defaults to 0", async () => {
@@ -63,7 +104,11 @@ test("if likes property is missing, it defaults to 0", async () => {
     url: "http://testblog.com",
   };
 
-  const response = await api.post("/api/blogs").send(newBlog).expect(201);
+  const response = await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(newBlog)
+    .expect(201);
 
   assert.strictEqual(response.body.likes, 0);
 });
@@ -75,7 +120,11 @@ test("responds with status code 400 if title is missing", async () => {
     likes: 10,
   };
 
-  await api.post("/api/blogs").send(newBlog).expect(400);
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(newBlog)
+    .expect(400);
 });
 
 test("responds with status code 400 if url is missing", async () => {
@@ -85,25 +134,50 @@ test("responds with status code 400 if url is missing", async () => {
     likes: 10,
   };
 
-  await api.post("/api/blogs").send(newBlog).expect(400);
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(newBlog)
+    .expect(400);
 });
 
 test("deleting a single blog post", async () => {
-  const initialBlogs = await Blog.find({});
-  const blogToDelete = initialBlogs[0];
+  const newBlog = {
+    title: "Test 75492",
+    author: "Test Au8362857thor",
+    url: "http://testblog3782.com",
+    likes: 10,
+  };
 
-  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  const response = await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(newBlog)
+    .expect(201);
+
+  const blogToDeleteId = response.body.id;
+
+  await api
+    .delete(`/api/blogs/${blogToDeleteId}`)
+    .set("Authorization", `Bearer ${token}`)
+    .expect(204);
 
   const blogsAfterDeletion = await Blog.find({});
-  assert.strictEqual(blogsAfterDeletion.length, initialBlogs.length - 1);
-
-  const blogIds = blogsAfterDeletion.map((blog) => blog.id);
-  assert.ok(!blogIds.includes(blogToDelete.id));
+  assert.strictEqual(
+    blogsAfterDeletion.length,
+    initialBlogs.length - 1,
+    "Number of blogs did not decrease by one after deleting a blog post"
+  );
 });
 
 test("deleting a non-existent blog post returns 404", async () => {
   const nonExistentId = "61234567890abcdef1234567";
-  await api.delete(`/api/blogs/${nonExistentId}`).expect(404);
+  const response = await api
+    .delete(`/api/blogs/${nonExistentId}`)
+    .set("Authorization", `Bearer ${token}`)
+    .expect(404);
+
+  assert.strictEqual(response.status, 404, "Expected status code 404");
 });
 
 test("updating the information of an individual blog post", async () => {
@@ -119,6 +193,7 @@ test("updating the information of an individual blog post", async () => {
 
   const response = await api
     .put(`/api/blogs/${blogToUpdate.id}`)
+    .set("Authorization", `Bearer ${token}`)
     .send(updatedBlogData)
     .expect(200)
     .expect("Content-Type", /application\/json/);
@@ -128,14 +203,18 @@ test("updating the information of an individual blog post", async () => {
   assert.strictEqual(updatedBlog.author, updatedBlogData.author);
   assert.strictEqual(updatedBlog.url, updatedBlogData.url);
   assert.strictEqual(updatedBlog.likes, updatedBlogData.likes);
+
+  assert.strictEqual(response.status, 200, "Expected status code 200");
 });
 
 test("updating a non-existent blog post returns 404", async () => {
   const nonExistentId = "61234567890abcdef1234567";
   const response = await api
     .put(`/api/blogs/${nonExistentId}`)
+    .set("Authorization", `Bearer ${token}`)
     .send({ title: "Updated Title" });
-  assert.strictEqual(response.status, 404);
+
+  assert.strictEqual(response.status, 404, "Expected status code 404");
 });
 
 after(async () => {

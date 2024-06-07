@@ -1,3 +1,2 @@
-//get_blogs.rest file from the requests folder
 
 GET http://localhost:3003/api/blogs

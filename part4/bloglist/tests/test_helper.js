@@ -1,5 +1,3 @@
-// tests/test_helper.js
-
 const User = require("../models/user");
 
 const usersInDb = async () => {
