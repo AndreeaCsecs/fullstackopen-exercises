@@ -3,7 +3,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ setBlogs, blogs, notify }) => {
+const BlogForm = ({ setBlogs, blogs, notify, blogFormRef }) => {
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
   const handleChange = ({ target }) => {
@@ -22,6 +22,7 @@ const BlogForm = ({ setBlogs, blogs, notify }) => {
       notify(
         `A new blog "${returnedBlog.title}" by ${returnedBlog.author} added`
       );
+      blogFormRef.current.toggleVisibility();
     } catch (exception) {
       notify("Error adding blog");
     }
