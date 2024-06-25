@@ -22,3 +22,4 @@ schema.set("toJSON", {
 });
 
 module.exports = mongoose.model("Blog", schema);
+

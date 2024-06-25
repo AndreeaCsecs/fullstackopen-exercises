@@ -1,4 +1,4 @@
-//BACKEND - controllers/blogs.js
+// backend/controllers/blogs.js
 
 const jwt = require("jsonwebtoken");
 const router = require("express").Router();
@@ -25,7 +25,7 @@ router.post("/", userExtractor, async (request, response) => {
     return response.status(400).json({ error: "title or url missing" });
   }
 
-  blog.likes = blog.likes | 0;
+  blog.likes = blog.likes || 0;
   blog.user = user;
   user.blogs = user.blogs.concat(blog._id);
 
@@ -40,6 +40,7 @@ router.delete("/:id", userExtractor, async (request, response) => {
   const user = request.user;
 
   const blog = await Blog.findById(request.params.id);
+
   if (!blog) {
     return response.status(204).end();
   }
@@ -67,6 +68,7 @@ router.put("/:id", async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
+    user: body.user,
   };
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {

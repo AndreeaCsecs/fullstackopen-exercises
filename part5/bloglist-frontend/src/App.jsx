@@ -1,6 +1,6 @@
-//src/App.jsx
+// src/App.jsx
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
@@ -22,7 +22,10 @@ const App = () => {
       setUser(user);
       blogService.setToken(user.token);
     }
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => {
+      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
+      setBlogs(sortedBlogs);
+    });
   }, []);
 
   const handleLogout = () => {
@@ -40,6 +43,14 @@ const App = () => {
   const createBlog = (blog) => {
     setBlogs(blogs.concat(blog));
     blogFormRef.current.toggleVisibility();
+  };
+
+  const updateBlog = (deletedBlog) => {
+    if (deletedBlog) {
+      setBlogs(blogs.filter((blog) => blog.id !== deletedBlog.id));
+    } else {
+      console.error("Deleted blog object is null or undefined");
+    }
   };
 
   if (!user) {
@@ -62,7 +73,7 @@ const App = () => {
         <BlogForm createBlog={createBlog} notify={notify} />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} user={user} />
       ))}
     </div>
   );
