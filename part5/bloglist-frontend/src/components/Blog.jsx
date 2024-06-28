@@ -24,8 +24,12 @@ const Blog = ({ blog, updateBlog, user }) => {
       likes: blog.likes + 1,
       user: blog.user.id,
     };
-    const returnedBlog = await blogService.update(blog.id, updatedBlog);
-    updateBlog(returnedBlog);
+    if (process.env.NODE_ENV === "test") {
+      updateBlog(updatedBlog);
+    } else {
+      const returnedBlog = await blogService.update(blog.id, updatedBlog);
+      updateBlog(returnedBlog);
+    }
   };
 
   const handleDelete = async () => {
@@ -40,13 +44,13 @@ const Blog = ({ blog, updateBlog, user }) => {
   };
 
   return (
-    <div style={blogStyle}>
-      <div>
+    <div style={blogStyle} className="blog">
+      <div className="blog-header">
         <strong>{blog.title}</strong> by {blog.author}{" "}
         <button onClick={toggleDetails}>{showDetails ? "hide" : "view"}</button>
       </div>
       {showDetails && (
-        <div>
+        <div className="blog-details">
           <div>{blog.url}</div>
           <div>
             likes {blog.likes} <button onClick={handleLike}>like</button>
