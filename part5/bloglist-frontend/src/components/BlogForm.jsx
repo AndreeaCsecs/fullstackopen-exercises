@@ -1,4 +1,4 @@
-//src/components/BlogForm.jsx
+// src/components/BlogForm.jsx
 
 import { useState } from "react";
 import blogService from "../services/blogs";
@@ -33,15 +33,30 @@ const BlogForm = ({ createBlog, notify }) => {
       <form onSubmit={addBlog}>
         <div>
           title:
-          <input name="title" value={newBlog.title} onChange={handleChange} />
+          <input
+            name="title"
+            value={newBlog.title}
+            onChange={handleChange}
+            placeholder="Title"
+          />
         </div>
         <div>
           author:
-          <input name="author" value={newBlog.author} onChange={handleChange} />
+          <input
+            name="author"
+            value={newBlog.author}
+            onChange={handleChange}
+            placeholder="Author"
+          />
         </div>
         <div>
           url:
-          <input name="url" value={newBlog.url} onChange={handleChange} />
+          <input
+            name="url"
+            value={newBlog.url}
+            onChange={handleChange}
+            placeholder="URL"
+          />
         </div>
         <button type="submit">create</button>
       </form>
