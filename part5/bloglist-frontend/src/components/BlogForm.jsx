@@ -1,4 +1,4 @@
-// src/components/BlogForm.jsx
+// FRONTEND - src/components/BlogForm.jsx
 
 import { useState } from "react";
 import blogService from "../services/blogs";

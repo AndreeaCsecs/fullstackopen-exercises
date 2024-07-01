@@ -32,18 +32,20 @@ const LoginForm = ({ setUser, notify }) => {
       <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
-          username
+          <label htmlFor="username">username</label>
           <input
             type="text"
+            id="username"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
-          password
+          <label htmlFor="password">password</label>
           <input
             type="password"
+            id="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}

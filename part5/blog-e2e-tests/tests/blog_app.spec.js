@@ -1,29 +1,59 @@
-import { test, expect } from "@playwright/test";
+//blog-e2e-tests/tests/blog_app.spec.js
 
-test.describe("Blog app", () => {
+const { test, expect, describe, beforeEach } = require("@playwright/test");
+
+describe("Blog app", () => {
+  beforeEach(async ({ page, request }) => {
+    // Reset the database
+    await request.post("http://localhost:3003/api/testing/reset");
+
+    // Create a user
+    await request.post("http://localhost:3003/api/users", {
+      data: {
+        name: "Test User",
+        username: "testuser",
+        password: "password",
+      },
+    });
+
+    // Optionally create blogs if needed for specific tests
+    // await request.post("http://localhost:3003/api/blogs", {
+    //   data: {
+    //     title: "Test Blog",
+    //     author: "Test Author",
+    //     url: "http://test.com",
+    //     likes: 0,
+    //   },
+    // });
+
+    // Navigate to the app
+    await page.goto("http://localhost:5173");
+  });
+
   test("Login form is shown", async ({ page }) => {
-    // Navigate to the login page
-    await page.goto("http://localhost:5173"); // Replace with your actual URL
+    await expect(page.locator("#username")).toBeVisible();
+    await expect(page.locator("#password")).toBeVisible();
+  });
 
-    // Wait for the page to fully load
-    await page.waitForLoadState("networkidle");
+  describe("Login", () => {
+    test("succeeds with correct credentials", async ({ page }) => {
+      await page.fill("#username", "testuser");
+      await page.fill("#password", "password");
+      await page.click('button[type="submit"]');
 
-    // Debugging: Take a screenshot before checking for visibility
-    await page.screenshot({ path: "screenshot-before.png" });
-    console.log(await page.content()); // Print the HTML content of the page
-
-    // Check if the login form is visible on the page
-    await expect(page.getByRole("textbox", { name: "Username" })).toBeVisible({
-      timeout: 10000,
-    });
-    await expect(page.getByRole("textbox", { name: "Password" })).toBeVisible({
-      timeout: 10000,
-    });
-    await expect(page.getByRole("button", { name: "login" })).toBeVisible({
-      timeout: 10000,
+      // Add assertion to verify successful login
+      await expect(page.locator("text=Welcome Test User!")).toBeVisible();
     });
 
-    // Debugging: Take a screenshot after checking for visibility
-    await page.screenshot({ path: "screenshot-after.png" });
+    test("fails with wrong credentials", async ({ page }) => {
+      await page.fill("#username", "testuser");
+      await page.fill("#password", "wrongpassword");
+      await page.click('button[type="submit"]');
+
+      // Add assertion to verify failed login
+      await expect(
+        page.locator("text=Wrong username or password")
+      ).toBeVisible();
+    });
   });
 });
