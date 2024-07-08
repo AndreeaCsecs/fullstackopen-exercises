@@ -1,5 +1,3 @@
-//src/components/LoginForm.jsx
-
 import { useState } from "react";
 import loginService from "../services/login";
 import blogService from "../services/blogs";

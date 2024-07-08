@@ -1,5 +1,3 @@
-//BACKEND - tests/blogs_api.test.js
-
 const supertest = require("supertest");
 const mongoose = require("mongoose");
 const { test, describe, after, beforeEach } = require("node:test");

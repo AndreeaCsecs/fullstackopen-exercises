@@ -1,5 +1,3 @@
-//BACKEND - models/blog.js
-
 const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
@@ -22,4 +20,3 @@ schema.set("toJSON", {
 });
 
 module.exports = mongoose.model("Blog", schema);
-

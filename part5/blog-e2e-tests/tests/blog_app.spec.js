@@ -70,7 +70,6 @@ describe("Blog app", () => {
       ).toBeVisible();
     });
 
-    /*
     test("a blog can be liked", async ({ page }) => {
       const blog = {
         title: "Test Blog",
@@ -91,7 +90,7 @@ describe("Blog app", () => {
 
       await page.click("#like-button");
 
-      await page.waitForTimeout(1000); 
+      await page.waitForTimeout(1000);
 
       const likeCountElement = await page.locator(".like-count");
       const likeCountText = await likeCountElement.textContent();
@@ -132,7 +131,7 @@ describe("Blog app", () => {
       );
       expect(removedBlog).toBeNull();
     });
-
+    /*
     test("the user can delete their blog", async ({ page }) => {
       const blog = {
         title: "Test Blog",
@@ -174,8 +173,7 @@ describe("Blog app", () => {
       );
       expect(deleteButtonForAnotherUser).toBeNull();
     });
-        */
-
+*/
     test("blogs are ordered by likes (most likes first)", async ({ page }) => {
       const blogs = [
         { title: "Blog A", author: "Author A", likes: 5 },

@@ -1,5 +1,3 @@
-//blog-e2e-tests/playwright.config.js
-
 // @ts-check
 const { defineConfig, devices } = require("@playwright/test");
 

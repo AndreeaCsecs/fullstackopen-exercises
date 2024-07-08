@@ -1,5 +1,3 @@
-// src/services/blogs.js
-
 import axios from "axios";
 
 const baseUrl = "/api/blogs";

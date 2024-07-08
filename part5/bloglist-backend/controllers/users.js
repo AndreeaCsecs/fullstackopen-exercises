@@ -1,5 +1,3 @@
-//BACKEND - controllers/users.js
-
 const bcrypt = require("bcrypt");
 const router = require("express").Router();
 const User = require("../models/user");
@@ -37,4 +35,3 @@ router.get("/", async (request, response) => {
 });
 
 module.exports = router;
-

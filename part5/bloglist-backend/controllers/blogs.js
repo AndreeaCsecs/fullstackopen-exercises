@@ -1,5 +1,3 @@
-// backend/controllers/blogs.js
-
 const jwt = require("jsonwebtoken");
 const router = require("express").Router();
 const Blog = require("../models/blog");

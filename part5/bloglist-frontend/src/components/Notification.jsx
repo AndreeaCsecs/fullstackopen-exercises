@@ -1,5 +1,3 @@
-//src/components/Notification.jsx:
-
 import React from "react";
 
 const Notification = ({ message }) => {

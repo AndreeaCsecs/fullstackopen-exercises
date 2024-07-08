@@ -1,5 +1,3 @@
-//src/components/Togglable.jsx
-
 import { useState, useImperativeHandle, forwardRef } from "react";
 import PropTypes from "prop-types";
 

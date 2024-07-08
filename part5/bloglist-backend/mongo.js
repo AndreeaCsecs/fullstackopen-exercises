@@ -1,5 +1,3 @@
-//BACKEND - mongo.js
-
 const mongoose = require("mongoose");
 
 if (process.argv.length < 3) {
@@ -49,4 +47,3 @@ if (process.argv.length === 3) {
     mongoose.connection.close();
   });
 }
-

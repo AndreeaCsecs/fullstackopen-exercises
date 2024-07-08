@@ -1,5 +1,3 @@
-// src/components/Blog.jsx
-
 import React, { useState } from "react";
 import blogService from "../services/blogs";
 
@@ -36,7 +34,7 @@ const Blog = ({ blog, updateBlog, user }) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       try {
         await blogService.remove(blog.id);
-        updateBlog(blog); // Pass the blog object for deletion case
+        updateBlog(blog);
       } catch (error) {
         console.error("Error deleting blog:", error);
       }
@@ -44,7 +42,7 @@ const Blog = ({ blog, updateBlog, user }) => {
   };
 
   return (
-    <div style={blogStyle} className="blog">
+    <div style={blogStyle} className="blog" data-blog-id={blog.id}>
       <div className="blog-header">
         <strong>{blog.title}</strong> by {blog.author}{" "}
         <button onClick={toggleDetails}>{showDetails ? "hide" : "view"}</button>
@@ -53,11 +51,19 @@ const Blog = ({ blog, updateBlog, user }) => {
         <div className="blog-details">
           <div>{blog.url}</div>
           <div>
-            likes {blog.likes} <button onClick={handleLike}>like</button>
+            likes {blog.likes}{" "}
+            <button id="like-button" onClick={handleLike}>
+              like
+            </button>
           </div>
           <div>{blog.user.name}</div>
           {user && user.username === blog.user.username && (
-            <button onClick={handleDelete}>remove</button>
+            <button
+              data-testid={`delete-blog-${blog.id}`}
+              onClick={handleDelete}
+            >
+              remove
+            </button>
           )}
         </div>
       )}

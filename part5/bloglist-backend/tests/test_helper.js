@@ -1,11 +1,8 @@
-//BACKEND - tests/test_helper.js
-
 const Blog = require("../models/blog");
 const User = require("../models/user");
 
 const initialBlogs = [
   {
-    /*
     title: "First Blog",
     author: "Author 1",
     url: "http://example.com/1",
@@ -22,7 +19,6 @@ const initialBlogs = [
     author: "Author 3",
     url: "http://example.com/3",
     likes: 7,
-  */
   },
 ];
 

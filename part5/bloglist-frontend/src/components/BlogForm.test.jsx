@@ -1,5 +1,3 @@
-// src/components/BlogForm.test.jsx
-
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -7,7 +5,6 @@ import { vi } from "vitest";
 import BlogForm from "./BlogForm";
 import blogService from "../services/blogs";
 
-// Mock the blogService.create method
 vi.mock("../services/blogs");
 
 test("<BlogForm /> calls createBlog with the right details", async () => {
@@ -15,7 +12,6 @@ test("<BlogForm /> calls createBlog with the right details", async () => {
   const notify = vi.fn();
   const user = userEvent.setup();
 
-  // Mock the blogService.create method to resolve with a test blog object
   blogService.create.mockResolvedValue({
     title: "Test Blog Title",
     author: "Test Author",
