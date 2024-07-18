@@ -1,4 +1,4 @@
-//src/reducers/anecdoteReducer.js
+// src/reducers/anecdoteReducer.js
 
 const anecdotesAtStart = [
   "If it hurts, do it more often",
@@ -21,11 +21,25 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
-  console.log("state now: ", state);
-  console.log("action", action);
-
-  return state;
+const anecdoteReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "VOTE_ANECDOTE": {
+      const id = action.payload.id;
+      const anecdoteToVote = state.find((anecdote) => anecdote.id === id);
+      const votedAnecdote = {
+        ...anecdoteToVote,
+        votes: anecdoteToVote.votes + 1,
+      };
+      return state.map((anecdote) =>
+        anecdote.id !== id ? anecdote : votedAnecdote
+      );
+    }
+    case "ADD_ANECDOTE": {
+      return [...state, action.payload];
+    }
+    default:
+      return state;
+  }
 };
 
-export default reducer;
+export default anecdoteReducer;
