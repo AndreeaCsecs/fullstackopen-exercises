@@ -1,15 +1,22 @@
+// src/components/AnecdoteList.jsx
+
 import { useSelector, useDispatch } from "react-redux";
 import { voteAnecdote } from "../actions/anecdoteActions";
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state);
+  const anecdotes = useSelector((state) => state.anecdotes);
+  const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
 
   const vote = (id) => {
     dispatch(voteAnecdote(id));
   };
 
-  const sortedAnecdotes = anecdotes.slice().sort((a, b) => b.votes - a.votes);
+  const filteredAnecdotes = anecdotes.filter((anecdote) =>
+    anecdote.content.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  const sortedAnecdotes = filteredAnecdotes.sort((a, b) => b.votes - a.votes);
 
   return (
     <div>
