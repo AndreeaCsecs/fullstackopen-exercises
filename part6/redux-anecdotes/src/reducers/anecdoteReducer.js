@@ -1,6 +1,7 @@
 // src/reducers/anecdoteReducer.js
 
 import { createSlice } from "@reduxjs/toolkit";
+import { showNotification } from "./notificationReducer";
 
 const anecdotesAtStart = [
   "If it hurts, do it more often",
@@ -41,4 +42,27 @@ const anecdoteSlice = createSlice({
 });
 
 export const { voteAnecdote, addAnecdote } = anecdoteSlice.actions;
+
+export const createAnecdote = (content) => {
+  return async (dispatch) => {
+    const newAnecdote = {
+      content,
+      id: getId(),
+      votes: 0,
+    };
+    dispatch(addAnecdote(newAnecdote));
+    dispatch(showNotification(`You added '${content}'`, 5));
+  };
+};
+
+export const voteForAnecdote = (id) => {
+  return async (dispatch, getState) => {
+    dispatch(voteAnecdote(id));
+    const votedAnecdote = getState().anecdotes.find(
+      (anecdote) => anecdote.id === id
+    );
+    dispatch(showNotification(`You voted '${votedAnecdote.content}'`, 5));
+  };
+};
+
 export default anecdoteSlice.reducer;
