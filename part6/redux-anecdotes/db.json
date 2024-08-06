@@ -34,6 +34,11 @@
       "id": "e775",
       "content": "testing addAnecdote",
       "votes": 3
+    },
+    {
+      "id": "3d2a",
+      "content": "testing addAnecdote",
+      "votes": 0
     }
   ]
 }

@@ -1,4 +1,4 @@
-//src/components/AnecdoteForm.jsx
+// src/components/AnecdoteForm.jsx
 
 import { useDispatch } from "react-redux";
 import { createAnecdote } from "../reducers/anecdoteReducer";
@@ -6,7 +6,7 @@ import { createAnecdote } from "../reducers/anecdoteReducer";
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
-  const addNewAnecdote = (event) => {
+  const addNewAnecdote = async (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
