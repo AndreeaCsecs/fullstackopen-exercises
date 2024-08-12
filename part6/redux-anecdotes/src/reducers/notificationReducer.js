@@ -1,4 +1,4 @@
-//src/reducers/notificationReducer.js
+// src/reducers/notificationReducer.js
 
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -17,8 +17,8 @@ const notificationSlice = createSlice({
 
 export const { setNotification, clearNotification } = notificationSlice.actions;
 
-export const showNotification = (message, seconds) => {
-  return async (dispatch) => {
+export const setNotificationWithTimeout = (message, seconds) => {
+  return (dispatch) => {
     dispatch(setNotification(message));
     setTimeout(() => {
       dispatch(clearNotification());
