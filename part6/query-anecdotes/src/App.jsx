@@ -1,3 +1,5 @@
+//part6/query-anecdotes/src/App.jsx
+
 import { useQuery } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
@@ -33,7 +35,7 @@ const App = () => {
   return (
     <div>
       <h3>Anecdote app</h3>
-      <Notification />
+      <Notification message="This is a notification" />
       <AnecdoteForm />
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
