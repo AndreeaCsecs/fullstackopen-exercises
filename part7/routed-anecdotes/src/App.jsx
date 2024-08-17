@@ -1,6 +1,16 @@
 //part7/routed-anecdotes/src/App.jsx
 
 import { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useParams,
+  useNavigate,
+} from "react-router-dom";
+import { Link } from "react-router-dom";
+import Notification from "./components/Notification";
+import PropTypes from "prop-types";
 
 const Menu = () => {
   const padding = {
@@ -8,15 +18,15 @@ const Menu = () => {
   };
   return (
     <div>
-      <a href="#" style={padding}>
+      <Link to="/" style={padding}>
         anecdotes
-      </a>
-      <a href="#" style={padding}>
+      </Link>
+      <Link to="/create" style={padding}>
         create new
-      </a>
-      <a href="#" style={padding}>
+      </Link>
+      <Link to="/about" style={padding}>
         about
-      </a>
+      </Link>
     </div>
   );
 };
@@ -26,17 +36,30 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
 );
 
+AnecdoteList.propTypes = {
+  anecdotes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      content: PropTypes.string.isRequired,
+      author: PropTypes.string,
+      info: PropTypes.string,
+      votes: PropTypes.number,
+    })
+  ).isRequired,
+};
+
 const About = () => (
   <div>
     <h2>About anecdote app</h2>
     <p>According to Wikipedia:</p>
-
     <em>
       An anecdote is a brief, revealing account of an individual person or an
       incident. Occasionally humorous, anecdotes differ from jokes because their
@@ -44,7 +67,7 @@ const About = () => (
       more general than the brief tale itself, such as to characterize a person
       by delineating a specific quirk or trait, to communicate an abstract idea
       about a person, place, or thing through the concrete details of a short
-      narrative. An anecdote is "a story with a point."
+      narrative. An anecdote is {'"a story with a point."'}
     </em>
 
     <p>
@@ -65,19 +88,21 @@ const Footer = () => (
   </div>
 );
 
-const CreateNew = (props) => {
+const CreateNew = ({ addNew }) => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.addNew({
+    addNew({
       content,
       author,
       info,
       votes: 0,
     });
+    navigate("/");
   };
 
   return (
@@ -108,10 +133,45 @@ const CreateNew = (props) => {
             onChange={(e) => setInfo(e.target.value)}
           />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
       </form>
     </div>
   );
+};
+
+CreateNew.propTypes = {
+  addNew: PropTypes.func.isRequired,
+};
+
+const Anecdote = ({ anecdotes }) => {
+  const id = useParams().id;
+  const anecdote = anecdotes.find((a) => a.id === Number(id));
+
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <p>Author: {anecdote.author}</p>
+      <p>Votes: {anecdote.votes}</p>
+      <p>
+        More info:{" "}
+        <a href={anecdote.info} target="_blank" rel="noopener noreferrer">
+          {anecdote.info}
+        </a>
+      </p>
+    </div>
+  );
+};
+
+Anecdote.propTypes = {
+  anecdotes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      content: PropTypes.string.isRequired,
+      author: PropTypes.string,
+      info: PropTypes.string,
+      votes: PropTypes.number,
+    })
+  ).isRequired,
 };
 
 const App = () => {
@@ -132,11 +192,15 @@ const App = () => {
     },
   ]);
 
-  const [notification, setNotification] = useState("");
+  const [notification, setNotification] = useState(null);
 
   const addNew = (anecdote) => {
-    anecdote.id = Math.round(Math.random() * 10000);
+    anecdote.id = anecdotes.length + 1;
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(`Anecdote '${anecdote.content}' added successfully!`);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -154,12 +218,21 @@ const App = () => {
 
   return (
     <div>
-      <h1>Software anecdotes</h1>
-      <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
-      <Footer />
+      <Router>
+        <h1>Software anecdotes</h1>
+        <Menu />
+        <Notification message={notification} />
+        <Routes>
+          <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+          <Route path="/create" element={<CreateNew addNew={addNew} />} />
+          <Route path="/about" element={<About />} />
+          <Route
+            path="/anecdotes/:id"
+            element={<Anecdote anecdotes={anecdotes} />}
+          />
+        </Routes>
+        <Footer />
+      </Router>
     </div>
   );
 };
