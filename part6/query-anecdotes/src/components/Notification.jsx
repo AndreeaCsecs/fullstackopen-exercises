@@ -1,9 +1,7 @@
-//part6/query-anecdotes/src/components/Notification.jsx
-
-import { useState } from "react";
+import { useNotificationValue } from "../NotificationContext";
 
 const Notification = () => {
-  const [notification, setNotification] = useState(null);
+  const notification = useNotificationValue();
 
   const style = {
     border: "solid",
@@ -12,7 +10,6 @@ const Notification = () => {
     marginBottom: 5,
   };
 
-  // If there's no notification, render nothing
   if (!notification) return null;
 
   return <div style={style}>{notification}</div>;

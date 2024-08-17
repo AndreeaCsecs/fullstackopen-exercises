@@ -1,5 +1,3 @@
-//part6/query-anecdotes/server.js
-
 import jsonServer from "json-server";
 
 const server = jsonServer.create();

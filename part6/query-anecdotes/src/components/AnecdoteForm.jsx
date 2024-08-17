@@ -1,17 +1,33 @@
-//part6/query-anecdotes/src/components/AnecdoteForm.jsx
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAnecdote } from "../requests";
+import { useNotificationDispatch } from "../NotificationContext";
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient();
+  const dispatch = useNotificationDispatch();
 
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
     onSuccess: (newAnecdote) => {
-      // Automatically update the anecdotes list after successful mutation
       const anecdotes = queryClient.getQueryData(["anecdotes"]);
       queryClient.setQueryData(["anecdotes"], anecdotes.concat(newAnecdote));
+
+      dispatch({
+        type: "SET_NOTIFICATION",
+        payload: `New anecdote '${newAnecdote.content}' created!`,
+      });
+      setTimeout(() => {
+        dispatch({ type: "CLEAR_NOTIFICATION" });
+      }, 5000);
+    },
+    onError: (error) => {
+      dispatch({
+        type: "SET_NOTIFICATION",
+        payload: `Error: ${error.response.data.error}`,
+      });
+      setTimeout(() => {
+        dispatch({ type: "CLEAR_NOTIFICATION" });
+      }, 5000);
     },
   });
 
@@ -25,7 +41,6 @@ const AnecdoteForm = () => {
       return;
     }
 
-    // Trigger the mutation to add a new anecdote
     newAnecdoteMutation.mutate({ content, votes: 0 });
   };
 

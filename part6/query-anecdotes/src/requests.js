@@ -1,5 +1,3 @@
-// part6/query-anecdotes/src/requests.js
-
 import axios from "axios";
 
 const baseUrl = "http://localhost:3001/anecdotes";

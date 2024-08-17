@@ -1,14 +1,13 @@
-// part6/query-anecdotes/src/App.jsx
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import { getAnecdotes, updateAnecdote } from "./requests";
+import { useNotificationDispatch } from "./NotificationContext";
 
 const App = () => {
   const queryClient = useQueryClient();
+  const dispatch = useNotificationDispatch();
 
-  // Fetch anecdotes using useQuery
   const {
     data: anecdotes,
     error,
@@ -16,10 +15,9 @@ const App = () => {
   } = useQuery({
     queryKey: ["anecdotes"],
     queryFn: getAnecdotes,
-    retry: false, // Optional: Disable retries on failure
+    retry: false,
   });
 
-  // Mutation for voting
   const voteMutation = useMutation({
     mutationFn: updateAnecdote,
     onSuccess: (updatedAnecdote) => {
@@ -30,6 +28,14 @@ const App = () => {
           anecdote.id === updatedAnecdote.id ? updatedAnecdote : anecdote
         )
       );
+
+      dispatch({
+        type: "SET_NOTIFICATION",
+        payload: `Anecdote '${updatedAnecdote.content}' voted!`,
+      });
+      setTimeout(() => {
+        dispatch({ type: "CLEAR_NOTIFICATION" });
+      }, 5000);
     },
   });
 
@@ -38,7 +44,6 @@ const App = () => {
     voteMutation.mutate(updatedAnecdote);
   };
 
-  // Handle loading and error states
   if (isLoading) {
     return <div>Loading data...</div>;
   }
@@ -52,7 +57,7 @@ const App = () => {
   return (
     <div>
       <h3>Anecdote app</h3>
-      <Notification message="This is a notification" />
+      <Notification />
       <AnecdoteForm />
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
