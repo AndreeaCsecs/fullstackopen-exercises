@@ -1,6 +1,5 @@
 //part7/routed-anecdotes/src/components/Notification.jsx
 
-import React from "react";
 import PropTypes from "prop-types";
 
 const Notification = ({ message }) => {
